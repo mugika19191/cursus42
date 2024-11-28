@@ -12,72 +12,81 @@
 
 #include <stdlib.h>
 
-int	get_pos(const char *big, const char *little, size_t len)
+int		in_set(char a, char const *set)
 {
-	int	i;
-	int	j;
+	int		i;
 
 	i = 0;
-	j = 0;
-	if (len == 0)
-		return (-1);
-	if (little[0] == '\0')
-		return (0);
-	while (len-- && big[j] && little[i])
+	while (set[i])
 	{
-		if (big[j] == little[i])
-			i++;
+		if (a == set[i++])
+			return (1);
+	}
+	return (0);
+}
+
+int		chars_front(char const *s1, char const *set)
+{
+	int		i;
+	int		count;
+	
+	i = 0;
+	count = 0;
+	while (s1[i])
+	{
+		if (in_set(s1[i++], set))
+			count++;
 		else
-		{
-			j = j - i;
-			i = 0;
-		}
-		j++;
+			return (count);
 	}
-	if (len >= 0 && !little[i])
-		return (j - i);
-	else
-		return (-1);
+	return (count);
 }
 
-int	find_amount(char const *s1, char const *set, int s)
+int		chars_back(char const *s1, char const *set)
 {
-	int	i;
-	char	*copy;
-
-	i = 0;
-	copy = (char *)s1;
-	while (ft_strnstr(copy, set, s))
+	int		i;
+	int		count;
+	
+	i = ft_strlen(s1);
+	count = 0;
+	while (--i)
 	{
-		copy = ft_strnstr(copy, set, s);
-		copy += ft_strlen(set);
-		i++;
+		if (in_set(s1[i], set))
+			count++;
+		else
+			return (count);
 	}
-	return (i * ft_strlen(set));
+	return (count);
 }
 
-char *ft_strtrim(char const *s1, char const *set)
+int		copyable(char const *s1, char const *set, int j)
 {
-	int	i;
-	int	j;
-	int	k;
-	int	l;
-	int	trims;
-	char	*res;
+	int		i;
 
 	i = ft_strlen(s1);
-	trims = find_amount(s1, set, i);
-	res = (char *)malloc(sizeof(char) * (i - trims + 1));
-	j = get_pos(s1, set, i);
-	while (k < (i - trims + 1))
+	if (j < chars_front(s1, set) || j >= (i -  chars_back(s1, set)))
+		return (0);
+	return (1);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*str;
+
+	i = ft_strlen(s1);
+	len = chars_front(s1, set) + chars_back(s1, set);
+	str = (char *)malloc(sizeof(char) * (i - len + 1));
+	j = 0;
+	i = 0;
+	while (i < ft_strlen(s1))
 	{
-		l = 0;
-		while (l < strlen(set))
-		{
-			res[k] = (s1 + j)[k];
-			k++;
-			l++;
-		}
+		if (copyable(s1, set, i))
+			str[j++] = s1[i];
+		i++;
 	}
-	return (res);
+	str[j] = '\0';
+	return (str);
 }

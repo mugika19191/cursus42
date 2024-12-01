@@ -10,6 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+int	is_space(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\n' 
+	|| c == '\v' || c == '\r' || c == '\f')
+		return (1);
+	return (0);
+}
+
 int	ft_atoi(const char *str)
 {
 	int	res;
@@ -19,7 +27,7 @@ int	ft_atoi(const char *str)
 	i = 0;
 	res = 0;
 	neg = 1;
-	while (str[i] == ' ')
+	while (is_space(str[i]))
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{

@@ -10,16 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 int	ft_strncmp(const char *string1, const char *string2, size_t count)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (string1[i] && string2[i] && count--)
+	while (i < count && (string1[i] || string2[i]))
 	{
-		if (string1[i] != string2[i])
+		if (string1[i] - string2[i])
 			return (string1[i] - string2[i]);
 		i++;
 	}
-	return (string1[i] - string2[i]);
+	return (0);
 }

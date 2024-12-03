@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imugica- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 12:30:11 by imugica-          #+#    #+#             */
-/*   Updated: 2024/11/26 12:59:49 by imugica-         ###   ########.fr       */
+/*   Created: 2024/12/03 12:28:36 by imugica-          #+#    #+#             */
+/*   Updated: 2024/12/03 13:08:59 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+int	ft_lstsize(t_list *lst)
 {
 	int	i;
 
-	i = 0;
-	if (size == 0)
+	i = 1;
+	if (!lst)
 		return (0);
-	while (i < (int)(size - 1) && src[i])
+	while (lst->next)
 	{
-		dest[i] = src[i];
+		lst = lst->next;
 		i++;
 	}
-	dest[i] = '\0';
-	while (src[i])
-		i++;
 	return (i);
 }

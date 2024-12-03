@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
+
+int	len_checks(char const *s1, char const *s2, int *i, int *j)
+{
+	if (!s1 || !s2)
+		return (0);
+	*i = ft_strlen(s1);
+	*j = ft_strlen(s2);
+	return (1);
+}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -19,8 +29,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		k;
 	char	*str;
 
-	i = ft_strlen(s1);
-	j = ft_strlen(s2);
+	if (!len_checks(s1, s2, &i, &j))
+		return (NULL);
 	k = 0;
 	str = (char *)malloc(sizeof(char) * (i + j + 1));
 	if (!str)
@@ -36,6 +46,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		str[k + i] = s2[k];
 		k++;
 	}
-	str[k + j] = '\0';
+	str[i + j] = '\0';
 	return (str);
 }

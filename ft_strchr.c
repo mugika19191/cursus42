@@ -10,11 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 char	*ft_strchr(const char *string, int c)
 {
 	while (*string)
 	{
-		if (*string == c)
+		if (*string == (unsigned char)c)
 			return ((char *)string);
 		string++;
 	}

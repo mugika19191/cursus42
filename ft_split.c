@@ -10,38 +10,45 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int word_count(char *str, char a)
+#include <stdlib.h>
+
+int	word_count(char *str, char a)
 {
-	int i;
-	int count;
+	int	i;
+	int	count;
+	int	in_word;
 
 	i = 0;
 	count = 0;
-	while(str[i])
+	in_word = 0;
+	while (str[i])
 	{
-		while(str[i] == a && str[i])
-			i++;
-		if (!str[i] && !count)
-			return (0);
-		while (str[i] != a && str[i])
-			i++;
-		count++;
+		if (str[i] != a && !in_word)
+		{
+			in_word = 1;
+			count++;
+		}
+		else if (str[i] == a)
+		{
+			in_word = 0;
+		}
+		i++;
 	}
 	return (count);
 }
 
-int    get_word_len(char const *str, char a, int pos)
+int	get_word_len(char const *str, char a, int pos)
 {
-	int i;
-	int count;
-	int len;
+	int	i;
+	int	count;
+	int	len;
 
 	i = 0;
 	count = 0;
 	len = 0;
-	while(str[i])
+	while (str[i])
 	{
-		while(str[i] == a && str[i])
+		while (str[i] == a && str[i])
 			i++;
 		if (!str[i] && !count)
 			return (0);
@@ -56,29 +63,51 @@ int    get_word_len(char const *str, char a, int pos)
 	return (len);
 }
 
-char **ft_split(char const *s, char c)
+char	*get_word(char *word, char const *s, char c, int *k)
 {
-	char    **str;
-	int     i;
-	int     j;
-	int     k;
+	int	i;
 
-	str = malloc(word_count((char *)s, c) + 1);
 	i = 0;
-	j = 0;
+	while (s[*k] == c && s[*k])
+		(*k)++;
+	while (s[*k] != c && s[*k])
+		word[i++] = s[(*k)++];
+	word[i] = '\0';
+	return (word);
+}
+
+void	free_all(char **str, int i)
+{
+	while (i >= 0)
+	{
+		free(str[i]);
+		i--;
+	}
+	free(str);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**str;
+	int		i;
+	int		k;
+
+	if (!s)
+		return (NULL);
+	str = malloc(sizeof(char *) * (word_count((char *)s, c) + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
 	k = 0;
 	while (i < word_count((char *)s, c))
 	{
 		str[i] = malloc(get_word_len(s, c, i) + 1);
-		while (j < get_word_len(s, c, i))
+		if (!str[i])
 		{
-			if (s[k] != c)
-				str[i][j++] = s[k++];
-			else
-				k++;
+			free_all(str, i - 1);
+			return (NULL);
 		}
-		str[i][j] = '\0';
-		j = 0;
+		str[i] = get_word(str[i], s, c, &k);
 		i++;
 	}
 	str[i] = NULL;

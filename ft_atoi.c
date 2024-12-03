@@ -12,8 +12,8 @@
 
 int	is_space(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\n' 
-	|| c == '\v' || c == '\r' || c == '\f')
+	if (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\r' || c == '\f')
 		return (1);
 	return (0);
 }

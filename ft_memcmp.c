@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 int	ft_memcmp(const void *buf1, const void *buf2, size_t count)
 {
 	int		i;
@@ -27,5 +29,5 @@ int	ft_memcmp(const void *buf1, const void *buf2, size_t count)
 			return (a[i] - b[i]);
 		i++;
 	}
-	return (a[i] - b[i]);
+	return (0);
 }

@@ -54,6 +54,8 @@ char	*ft_itoa(int n)
 
 	i = 0;
 	res = (char *)malloc(sizeof(char) * (len(n) + 1));
+	if (!res)
+		return (NULL);
 	ft_putnbr((long)n, res, &i);
 	res[i] = '\0';
 	return (res);

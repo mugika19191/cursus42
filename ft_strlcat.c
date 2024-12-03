@@ -10,16 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-size_t	strlcat(char *dest, const char *src, size_t size)
+#include "libft.h"
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
 {
 	int	i;
 	int	j;
 
 	i = 0;
 	j = 0;
+	if ((int)size <= ft_strlen(dest))
+		return (size + ft_strlen(src));
 	while (dest[i])
 		i++;
-	while ((i + j) < (size - 1) && src[j])
+	while ((i + j) < (int)(size - 1) && src[j])
 	{
 		dest[i + j] = src[j];
 		j++;

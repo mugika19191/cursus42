@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 char	*ft_strrchr(const char *string, int c)
 {
 	int		i;
@@ -17,10 +19,11 @@ char	*ft_strrchr(const char *string, int c)
 
 	i = ft_strlen(string);
 	a = (char *)string;
-	while (i--)
+	while (i >= 0)
 	{
-		if (string[i] == c)
+		if (string[i] == (unsigned char)c)
 			return (a + i);
+		i--;
 	}
 	return (NULL);
 }

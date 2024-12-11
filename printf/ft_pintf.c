@@ -6,47 +6,33 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:07:50 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/09 18:58:54 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:01:32 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdarg.h>
+#include "header.h"
 
-int	ft_print_char(char c)
+void	ft_long_to_hex(long long pos, int *len, int mode)
 {
-	write(1, &c, 1);
-	return (1);
-}
+	char	*a;
 
-int	ft_print_str(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		ft_print_char(str[i++]);
-	return (i);
-}
-
-void    ft_long_to_hex(long long pos, int *len)
-{
-    char    *a;
-    
-    a = "0123456789abcdef";
-    if (pos >= 16)
-    {
-        ft_long_to_hex(pos / 16, len);
-        ft_print_char(a[pos % 16]);
-        (*len)++;
-        return ;
-    }
-    if (pos < 16)
-    {
-        ft_print_char(a[pos]);
-        (*len)++;
-    }
-    return ;
+	if (mode == 0)
+		a = "0123456789abcdef";
+	else
+		a = "0123456789ABCDEF";
+	if (pos >= 16)
+	{
+		ft_long_to_hex(pos / 16, len, mode);
+		ft_print_char(a[pos % 16]);
+		(*len)++;
+		return ;
+	}
+	if (pos < 16)
+	{
+		ft_print_char(a[pos]);
+		(*len)++;
+	}
+	return ;
 }
 
 int	ft_print_mem(long long pos)
@@ -54,8 +40,13 @@ int	ft_print_mem(long long pos)
 	int	i;
 
 	i = 0;
+	if (!pos)
+	{
+		i += ft_print_str("(nil)");
+		return (i);
+	}
 	i += ft_print_str("0x");
-    ft_long_to_hex(pos, &i);
+	ft_long_to_hex(pos, &i, 0);
 	return (i);
 }
 
@@ -69,17 +60,15 @@ int	ft_format(char c, va_list args)
 	if (c == 's')
 		size += ft_print_str(va_arg(args, char *));
 	if (c == 'p')
-		size += ft_print_mem(va_arg(args,long long));
-	if (c == 'd')
-		printf("");
-	if (c == 'i')
-		printf("");
+		size += ft_print_mem(va_arg(args, long long));
+	if (c == 'd' || c == 'i')
+		size += ft_print_str(ft_itoa(va_arg(args, int)));
 	if (c == 'u')
-		printf("");
+		size += ft_print_str(ft_itoa_un(va_arg(args, unsigned int)));
 	if (c == 'x')
-		printf("");
+		ft_long_to_hex(va_arg(args, unsigned int), &size, 0);
 	if (c == 'X')
-		printf("");
+		ft_long_to_hex(va_arg(args, unsigned int), &size, 1);
 	if (c == '%')
 		size += ft_print_char('%');
 	return (size);
@@ -104,12 +93,4 @@ int	ft_printf(char const *str, ...)
 	}
 	va_end(args);
 	return (len);
-}
-
-int	main()
-{
-	int i = ft_printf("re%s%%","tard");
-	printf("\n%p\n",&i);
-	ft_printf("\n%p",&i);
-	return (0);	
 }

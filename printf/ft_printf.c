@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pintf.c                                         :+:      :+:    :+:   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:07:50 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/11 17:31:05 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/16 14:58:47 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	ft_long_to_hex(long long pos, int *len, int mode)
+void	ft_long_to_hex(unsigned long pos, int *len, int mode)
 {
 	char	*a;
 
@@ -35,7 +35,7 @@ void	ft_long_to_hex(long long pos, int *len, int mode)
 	return ;
 }
 
-int	ft_print_mem(long long pos)
+int	ft_print_mem(unsigned long pos)
 {
 	int	i;
 
@@ -60,7 +60,7 @@ int	ft_format(char c, va_list args)
 	if (c == 's')
 		size += ft_print_str(va_arg(args, char *), 0);
 	if (c == 'p')
-		size += ft_print_mem(va_arg(args, long long));
+		size += ft_print_mem(va_arg(args, unsigned long));
 	if (c == 'd' || c == 'i')
 		size += ft_print_str(ft_itoa(va_arg(args, int)), 1);
 	if (c == 'u')

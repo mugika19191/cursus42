@@ -25,8 +25,8 @@ int	main()
 	b = printf("re%s%%\n","");
 	printf("el original [%d], el mio [%d]\n",a,b);
 	printf("---pointer---\n");
-	a = printf("%p\n",&a);
-	b = ft_printf("%p\n",&a);
+	a = printf("%p\n",(void *)-1);
+	b = ft_printf("%p\n",(void *)-1);
     printf("el original [%d], el mio [%d]\n",a,b);
 	printf("---pointer (null)---\n");
 	a = printf("%p\n",NULL);

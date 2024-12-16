@@ -10,8 +10,6 @@
 #                                                                              #
 # **************************************************************************** #
 
-# Compiler and flags
-
 NAME = libft.a
 
 SRCS = ft_isalpha.c \
@@ -65,7 +63,7 @@ BONUS_OBJS = $(BONUS:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -I.
 
 all: $(NAME)
 
@@ -84,6 +82,6 @@ fclean: clean
 re:	fclean all
 
 bonus:	$(OBJS) $(BONUS_OBJS)
-		@ar rcs $(NAME) $(OBJS) $(BONUS_OBJS)
+		@ar rcs $(NAME) $(BONUS_OBJS)
 
-.PHONY: all clean fclean 
+.PHONY: all clean fclean re bonus

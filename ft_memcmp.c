@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imugica- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:57:06 by imugica-          #+#    #+#             */
-/*   Updated: 2024/11/26 11:03:04 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:17:24 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 int	ft_memcmp(const void *buf1, const void *buf2, size_t count)
 {
-	int		i;
-	char	*a;
-	char	*b;
+	int				i;
+	unsigned char	*a;
+	unsigned char	*b;
 
 	i = 0;
-	a = (char *)buf1;
-	b = (char *)buf2;
+	a = (unsigned char *)buf1;
+	b = (unsigned char *)buf2;
 	if (count == 0)
 		return (0);
 	while (a[i] && b[i] && count--)
 	{
-		if (a[i] != b[i])
+		if (a[i] != b[i] || !count)
 			return (a[i] - b[i]);
 		i++;
 	}
-	return (0);
+	return (a[i] - b[i]);
 }

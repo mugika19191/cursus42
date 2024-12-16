@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:56:08 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/11 16:56:14 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:30:44 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		ft_printf(char const *str, ...);
 int		ft_format(char c, va_list args);
 int		ft_print_mem(long long pos);
 void	ft_long_to_hex(long long pos, int *len, int mode);
-int		ft_print_str(char *str);
+int		ft_print_str(char *str, int nbr);
 int		ft_print_char(char c);
 void	ft_putnbr(long nb, char *str, unsigned int *i);
 int		len(int nb);

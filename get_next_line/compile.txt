@@ -1,0 +1,2 @@
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=2 *.c -o a
+valgrind --leak-check=full ./a

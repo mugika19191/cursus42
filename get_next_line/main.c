@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:56:59 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/19 13:08:45 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:25:47 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main(){
     while ((str = get_next_line(fd)))
     {
         printf("-------EN MAIN[%d]-------\n%s", i++, str);
-        //free(str);
+        free(str);
     }
     return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:52:58 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/19 14:21:05 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:41:08 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char *ft_clean(char **rem)
 	if (*(*rem + i))
 		str[i] = '\n';
 	str[i + 1] = '\0';
+	//hay que mirar donde cae
 	*rem = *rem + i + 1;
 	return (str);
 }
@@ -56,9 +57,19 @@ char	*ft_strchr(const char *string, int c)
 	return (0);
 }
 
+int	ft_check_null(int bytes, char **rem)
+{
+	if (!bytes && !*rem)
+	{
+		free(*rem);
+		return (1);	
+	}
+	return (0);
+}
+
 char *get_next_line(int fd)
 {
-	static char *rem;
+	static char *rem = NULL;
 	char *buffer;
 	int bytes;
 	
@@ -69,14 +80,16 @@ char *get_next_line(int fd)
 		return (0);
 	}
 	bytes = read(fd, buffer, BUFFER_SIZE);
+	if (ft_check_null(bytes, &rem))
+		return (0);
 	if (bytes)
 	{
-		rem = ft_strjoin(rem, buffer, bytes);
+		rem = ft_strjoin(&rem, buffer, bytes);
 		while (!ft_strchr(rem, '\n') && bytes && bytes == BUFFER_SIZE)
 		{
 			bytes = read(fd, buffer, BUFFER_SIZE);
 			if (bytes)
-				rem = ft_strjoin(rem, buffer, bytes);
+				rem = ft_strjoin(&rem, buffer, bytes);
 		}
 	}
 	free(buffer);

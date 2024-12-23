@@ -6,13 +6,19 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:53:30 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/20 13:33:22 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/22 19:09:53 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "get_next_line.h"
+
+char	*ft_free_return(char **mem)
+{
+	free(*mem);
+	return (0);
+}
 
 int	ft_strlen(const char *c)
 {
@@ -60,11 +66,7 @@ char	*ft_strjoin(char **s1, char const *s2, int bytes)
 		return (0);
 	ft_memcpy(newstring, *s1, lens1);
 	ft_memcpy(newstring + lens1, s2, bytes);
-	if (*s1)
-	{
-		if (!**s1)
-			*s1 = 0;
-		//free(*s1);
-	}
+	newstring[lensdst - 1] = '\0';
+	free(*s1);
 	return (newstring);
 }

@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:56:59 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/20 13:25:47 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/22 18:05:41 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ int main(){
     else{
         printf("\nFile %s opened sucessfully!\n", fileName);
     }
-    while ((str = get_next_line(fd)))
+    while ((str = get_next_line(fd)) && i < 20)
     {
-        printf("-------EN MAIN[%d]-------\n%s", i++, str);
+        printf("-------EN MAIN[%d]-------\n%s", ++i, str);
         free(str);
+        str = 0;
     }
     return 0;
 }

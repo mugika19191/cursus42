@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:52:58 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/20 13:41:08 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/22 19:16:04 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,60 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char *ft_clean(char **rem)
+char	*ft_strchr(char *string, int c)
 {
-	int	i;
-	int	len;
+	while (*string)
+	{
+		if (*string == (unsigned char)c)
+			return ((char *)string);
+		string++;
+	}
+	if (c == '\0')
+		return (0);
+	return (0);
+}
+
+int	ft_check_null(int bytes, char **rem, char **buffer)
+{
+	if (!bytes && !*rem)
+	{
+		free(*buffer);
+		free(*rem);
+		return (1);
+	}
+	return (0);
+}
+
+char	*trim_newline(char **str1)
+{
+	char	*newline_pos;
+	size_t	length;
+	char	*trimmed_str;
+
+	newline_pos = ft_strchr(*str1, '\n');
+	if (newline_pos == NULL)
+		return (ft_free_return(str1));
+	length = ft_strlen(newline_pos + 1);
+	trimmed_str = (char *)malloc(length + 1);
+	if (trimmed_str == NULL)
+		return (ft_free_return(str1));
+	else if (!length)
+	{
+		free(trimmed_str);
+		return (ft_free_return(str1));
+	}
+	ft_memcpy(trimmed_str, newline_pos + 1, length);
+	free(*str1);
+	trimmed_str[length] = '\0';
+	return (trimmed_str);
+}
+
+char	*ft_clean(char **rem)
+{
+	int		i;
+	int		len;
 	char	*str;
-	
+
 	i = 0;
 	len = 0;
 	while (*(*rem + len) != '\n' && *(*rem + len))
@@ -37,50 +85,24 @@ char *ft_clean(char **rem)
 		i++;
 	}
 	if (*(*rem + i))
-		str[i] = '\n';
-	str[i + 1] = '\0';
-	//hay que mirar donde cae
-	*rem = *rem + i + 1;
+		str[i++] = '\n';
+	str[i] = '\0';
+	*rem = trim_newline(rem);
 	return (str);
 }
 
-char	*ft_strchr(const char *string, int c)
+char	*get_next_line(int fd)
 {
-	while (*string)
-	{
-		if (*string == (unsigned char)c)
-			return ((char *)string);
-		string++;
-	}
-	if (c == '\0')
-		return (0);
-	return (0);
-}
+	static char	*rem = NULL;
+	char		*buffer;
+	int			bytes;
 
-int	ft_check_null(int bytes, char **rem)
-{
-	if (!bytes && !*rem)
-	{
-		free(*rem);
-		return (1);	
-	}
-	return (0);
-}
-
-char *get_next_line(int fd)
-{
-	static char *rem = NULL;
-	char *buffer;
-	int bytes;
-	
-	buffer = malloc(BUFFER_SIZE);
-	if (fd == -1 || !BUFFER_SIZE || !buffer )
-	{
-		free(buffer);
-		return (0);
-	}
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (fd == -1 || !BUFFER_SIZE || !buffer)
+		return (ft_free_return(&buffer));
 	bytes = read(fd, buffer, BUFFER_SIZE);
-	if (ft_check_null(bytes, &rem))
+	buffer[BUFFER_SIZE] = '\0';
+	if (ft_check_null(bytes, &rem, &buffer))
 		return (0);
 	if (bytes)
 	{
@@ -93,5 +115,6 @@ char *get_next_line(int fd)
 		}
 	}
 	free(buffer);
+	buffer = 0;
 	return (ft_clean(&rem));
 }

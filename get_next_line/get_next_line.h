@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:53:44 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/22 19:12:36 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/26 19:06:10 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,7 @@ char	*ft_clean(char **rem);
 char	*ft_strchr(char *string, int c);
 int		ft_check_null(int bytes, char **rem, char **buffer);
 char	*ft_free_return(char **mem);
+void	ft_sanity_buffer(char *buffer, int bytes);
+char	*trim_newline(char **str1);
 
 #endif

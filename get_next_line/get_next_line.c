@@ -6,14 +6,13 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:52:58 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/22 19:16:04 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:40:07 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 char	*ft_strchr(char *string, int c)
 {
@@ -30,7 +29,7 @@ char	*ft_strchr(char *string, int c)
 
 int	ft_check_null(int bytes, char **rem, char **buffer)
 {
-	if (!bytes && !*rem)
+	if ((bytes <= 0) && !*rem)
 	{
 		free(*buffer);
 		free(*rem);
@@ -101,15 +100,16 @@ char	*get_next_line(int fd)
 	if (fd == -1 || !BUFFER_SIZE || !buffer)
 		return (ft_free_return(&buffer));
 	bytes = read(fd, buffer, BUFFER_SIZE);
-	buffer[BUFFER_SIZE] = '\0';
 	if (ft_check_null(bytes, &rem, &buffer))
 		return (0);
+	buffer[bytes] = '\0';
 	if (bytes)
 	{
 		rem = ft_strjoin(&rem, buffer, bytes);
 		while (!ft_strchr(rem, '\n') && bytes && bytes == BUFFER_SIZE)
 		{
 			bytes = read(fd, buffer, BUFFER_SIZE);
+			ft_sanity_buffer(buffer, bytes);
 			if (bytes)
 				rem = ft_strjoin(&rem, buffer, bytes);
 		}

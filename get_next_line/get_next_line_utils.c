@@ -6,12 +6,11 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 10:53:30 by imugica-          #+#    #+#             */
-/*   Updated: 2024/12/22 19:09:53 by imugica-         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:40:29 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <stdio.h>
 #include "get_next_line.h"
 
 char	*ft_free_return(char **mem)
@@ -58,7 +57,10 @@ char	*ft_strjoin(char **s1, char const *s2, int bytes)
 
 	if (!s2)
 		return (0);
-	lens1 = ft_strlen(*s1);
+	if (*s1)
+		lens1 = ft_strlen(*s1);
+	else
+		lens1 = 0;
 	lens2 = ft_strlen(s2);
 	lensdst = lens1 + lens2 + 1 ;
 	newstring = malloc(lensdst);
@@ -69,4 +71,12 @@ char	*ft_strjoin(char **s1, char const *s2, int bytes)
 	newstring[lensdst - 1] = '\0';
 	free(*s1);
 	return (newstring);
+}
+
+void	ft_sanity_buffer(char *buffer, int bytes)
+{
+	if (bytes < BUFFER_SIZE)
+	{
+		buffer[bytes] = '\0';
+	}
 }

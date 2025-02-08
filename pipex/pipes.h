@@ -3,6 +3,7 @@
 //# include <stdarg.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include <sys.h>
 
 typedef struct s_pipex
 {

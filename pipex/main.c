@@ -19,6 +19,37 @@
 	return (1);
 }*/
 
+void execute_command(char *cmd, char **env)
+{
+    char **args = ft_split(cmd, ' ');  // Implement `ft_split()` yourself
+    char *path = get_path(args[0], env);  // Implement `get_path()`
+
+    if (execve(path, args, env) == -1)
+    {
+        perror("Command execution failed");
+        ft_free_tab(args);
+        exit(EXIT_FAILURE);
+    }
+}
+
+
+void child_process(t_pipex *data, char *cmd, char **env)
+{
+    dup2(data->fd_file1, STDIN_FILENO);   // Read from infile
+    dup2(data->pipes[1], STDOUT_FILENO);  // Write to pipe
+    close(data->pipes[0]);  // Close unused read end of pipe
+    execute_command(cmd, env);
+}
+
+void parent_process(t_pipex *data, char *cmd, char **env)
+{
+    wait(NULL);  // Wait for child process to finish
+    dup2(data->pipes[0], STDIN_FILENO);  // Read from pipe
+    dup2(data->fd_file2, STDOUT_FILENO); // Write to outfile
+    close(data->pipes[1]);  // Close unused write end of pipe
+    execute_command(cmd, env);
+}
+
 int	check_infile(char *filename, int *fd)
 {
 	*fd = open(filename, O_RDONLY);
@@ -51,7 +82,9 @@ int	main(int count, char **args, char **env)
 	if (data.pid < 0)
 		return (0);
 	if (data.pid == 0)
-		child();
+        child_process(&data, args[2], env); // Execute cmd1
+    else
+        parent_process(&data, args[3], env); // Execute cmd2
 	close(data.fd_file1);
 	close(data.fd_file2);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:21:26 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/06 11:45:38 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/11 18:51:34 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,33 @@
 	return (1);
 }*/
 
-void execute_command(char *cmd, char **env)
+int	execute_command(char *args, char **env)
 {
-    char **args = ft_split(cmd, ' ');  // Implement `ft_split()` yourself
-    char *path = get_path(args[0], env);  // Implement `get_path()`
+	int		i;
+	char	*str;
+	char	**str2;
+	char	*path;
+	int		j;
 
-    if (execve(path, args, env) == -1)
-    {
-        perror("Command execution failed");
-        ft_free_tab(args);
-        exit(EXIT_FAILURE);
-    }
+	i = 0;
+	j = 0;
+	while (env[i])
+	{
+		str = ft_strnstr(env[i], "PATH=", ft_strlen("PATH="));
+		if (str)
+		{
+			str2 = ft_split(&str[5], ':');
+			while (str2[j])
+			{
+				path = ft_strjoin(ft_strjoin(str2[j++], "/"), ft_split(args,
+							' ')[0]);
+				execve(path, ft_split(args, ' '), env);
+			}
+		}
+		j = 0;
+		i++;
+	}
+	return (0);
 }
 
 

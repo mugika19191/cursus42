@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:31:34 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/18 11:14:45 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/19 15:25:45 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <errno.h>
 
 typedef struct s_pipex
 {
@@ -33,5 +34,6 @@ int			check_outfile(char *filename, int *fd);
 int			check_infile(char *filename, int *fd);
 int			execute_command(char *args, char **env);
 void		free_all_mem(char ***str2);
+int			write_error(int i);
 
 #endif

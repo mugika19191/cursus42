@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:21:26 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/18 11:34:02 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/19 15:53:53 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	child_process(t_pipex *data, char *cmd, char **env)
 	dup2(data->pipes[1], STDOUT_FILENO);
 	close(data->pipes[0]);
 	execute_command(cmd, env);
-	exit(0);
+	write_error(1);
+	exit(127);
 }
 
 void	parent_process(t_pipex *data, char *cmd, char **env)
@@ -27,6 +28,7 @@ void	parent_process(t_pipex *data, char *cmd, char **env)
 	dup2(data->fd_file2, STDOUT_FILENO);
 	close(data->pipes[1]);
 	execute_command(cmd, env);
+	write_error(1);
 	exit(127);
 }
 
@@ -61,7 +63,7 @@ int	main(int count, char **args, char **env)
 	t_pipex	data;
 
 	if (count != 5)
-		return (1);
+		return (write_error(0));
 	if (ft_strlen(args[2]) == 0 || ft_strlen(args[3]) == 0)
 		return (1);
 	if (pipe(data.pipes) == -1)
@@ -74,7 +76,8 @@ int	main(int count, char **args, char **env)
 		child_process(&data, args[2], env);
 	else
 	{
-		wait(NULL);
+		//wait(&data.pid);
+		waitpid(data.pid, NULL, WNOHANG);
 		if (check_outfile(args[4], &data.fd_file2) < 0)
 			return (1);
 		parent_process(&data, args[3], env);

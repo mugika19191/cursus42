@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:31:54 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/18 11:15:01 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/19 15:33:40 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,17 @@ int	execute_command(char *args, char **env)
 		}
 	}
 	return (0);
+}
+
+int	write_error(int i)
+{
+	errno = EINVAL;
+	if (i == 0)
+		perror("./pipex file1 comm1 comm2 file2");
+	else if (i == 1)
+	{
+		errno = ESRCH;
+		perror("command not found");
+	}
+	return (1);
 }

@@ -35,5 +35,12 @@ void				swap(t_stack **a);
 void				ss(t_stack **a, t_stack **b);
 void				pa(t_stack **a, t_stack **b);
 void				pb(t_stack **a, t_stack **b);
+void				ra(t_stack **a);
+void				rb(t_stack **a);
+void				rotate(t_stack **a);
+void				rr(t_stack **a, t_stack **b);
+t_stack				*ft_stsemilast(t_stack *lst);
+void				rra(t_stack **a);
+void				rrb(t_stack **a);
 
 #endif

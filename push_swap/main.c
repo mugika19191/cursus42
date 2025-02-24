@@ -63,7 +63,6 @@ int	main(int count, char **args)
 	t_stack	*a;
 	t_stack	*b;
 
-	a = NULL;
 	b = NULL;
 	i = 0;
 	if (count != 2)
@@ -75,7 +74,7 @@ int	main(int count, char **args)
 	load_numbers(&b, args);
 	if (!is_unique(a))
 		return (1);
-	pb(&a,&b);
+	rra(&a);
 	while (a)
 	{
 		printf("%d\n", a->content);

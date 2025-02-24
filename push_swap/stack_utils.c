@@ -4,7 +4,16 @@ t_stack	*ft_stlast(t_stack *lst)
 {
 	if (!lst)
 		return (NULL);
-	while (lst -> next)
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+t_stack	*ft_stsemilast(t_stack *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next->next)
 		lst = lst->next;
 	return (lst);
 }
@@ -28,15 +37,15 @@ t_stack	*ft_stnew(int content)
 	mylist = malloc(sizeof(struct s_stack));
 	if (!mylist)
 		return (NULL);
-	mylist -> next = NULL;
-	mylist -> content = content;
+	mylist->next = NULL;
+	mylist->content = content;
 	mylist->pos = -1;
 	return (mylist);
 }
 
 int	ft_stsize(t_stack *lst)
 {
-	int	i;
+	int i;
 
 	i = 1;
 	if (!lst)

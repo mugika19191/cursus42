@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:10:48 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/24 13:24:37 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:46:26 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	main(int count, char **args)
 	t_stack	*a;
 	t_stack	*b;
 
+	a = NULL;
 	b = NULL;
 	i = 0;
 	if (count != 2)
@@ -71,21 +72,21 @@ int	main(int count, char **args)
 		return (1);
 	}
 	load_numbers(&a, args);
-	load_numbers(&b, args);
 	if (!is_unique(a))
 		return (1);
-	rra(&a);
-	while (a)
-	{
-		printf("%d\n", a->content);
-		a = a->next;
-	}
 	printf("b\n");
+	//pb(&a,&b);
 	while (b)
 	{
 		printf("%d\n", b->content);
 		b = b->next;
 	}
-	// set_indices(&a);
+	set_indices(&a);
+	printf("indices:\n");
+	while (a)
+	{
+		printf("%d\n", a->pos);
+		a = a->next;
+	}
 	return (0);
 }

@@ -5,7 +5,7 @@ void	r_rotate(t_stack **a)
 	t_stack	*b;
 	t_stack	*c;
 
-	if (*a)
+	if ((*a)->next)
 	{
 		b = ft_stsemilast(*a);
 		c = ft_stlast(*a);

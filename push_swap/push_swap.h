@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:11:08 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/24 13:22:16 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:51:44 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,7 @@ void				rr(t_stack **a, t_stack **b);
 t_stack				*ft_stsemilast(t_stack *lst);
 void				rra(t_stack **a);
 void				rrb(t_stack **a);
+int					st_len(t_stack *a);
+void				set_indices(t_stack **a);
 
 #endif

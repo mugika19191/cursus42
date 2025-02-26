@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:11:08 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/25 11:51:44 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:12:55 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,9 @@ void				rra(t_stack **a);
 void				rrb(t_stack **a);
 int					st_len(t_stack *a);
 void				set_indices(t_stack **a);
+int					get_bit(int number, int i);
+int					has_ended(t_stack *a);
+int					check_n_bit(t_stack *a, int i);
+void				resolve(t_stack **a, t_stack **b);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:10:48 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/25 12:46:26 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/26 19:06:44 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,20 @@ void	load_numbers(t_stack **a, char **args)
 			write(1, "Error\n", 6);
 			exit(0);
 		}
+		free(numbers[i - 1]);
+	}
+	free(numbers);
+}
+
+void	ft_stfree(t_stack *stack)
+{
+	t_stack	*temp;
+
+	while (stack != NULL)
+	{
+		temp = stack;
+		stack = stack->next;
+		free(temp);
 	}
 }
 
@@ -74,19 +88,8 @@ int	main(int count, char **args)
 	load_numbers(&a, args);
 	if (!is_unique(a))
 		return (1);
-	printf("b\n");
-	//pb(&a,&b);
-	while (b)
-	{
-		printf("%d\n", b->content);
-		b = b->next;
-	}
 	set_indices(&a);
-	printf("indices:\n");
-	while (a)
-	{
-		printf("%d\n", a->pos);
-		a = a->next;
-	}
+	resolve(&a, &b);
+	ft_stfree(a);
 	return (0);
 }

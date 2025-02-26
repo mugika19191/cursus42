@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/26 18:40:37 by imugica-          #+#    #+#             */
+/*   Updated: 2025/02/26 18:43:54 by imugica-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 t_stack	*ft_stlast(t_stack *lst)
@@ -45,7 +57,7 @@ t_stack	*ft_stnew(int content)
 
 int	ft_stsize(t_stack *lst)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (!lst)

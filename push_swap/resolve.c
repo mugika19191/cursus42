@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   resolve.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imugica- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 18:39:42 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/26 18:39:43 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/27 12:54:57 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+int	in_reverse_order(t_stack *a)
+{
+	t_stack	*current;
+
+	if (a == NULL || a->next == NULL)
+		return (1);
+	current = a;
+	while (current->next != NULL)
+	{
+		if (current->pos < current->next->pos)
+		{
+			return (0);
+		}
+		current = current->next;
+	}
+	return (1);
+}
 
 int	in_order(t_stack *a)
 {

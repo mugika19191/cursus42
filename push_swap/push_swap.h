@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:11:08 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/26 16:12:55 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/27 12:55:53 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,9 @@ int					get_bit(int number, int i);
 int					has_ended(t_stack *a);
 int					check_n_bit(t_stack *a, int i);
 void				resolve(t_stack **a, t_stack **b);
+void				solve_two(t_stack **a);
+void				solve_insert(t_stack **a, t_stack **b);
+int					in_reverse_order(t_stack *a);
+int					in_order(t_stack *a);
 
 #endif

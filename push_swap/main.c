@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:10:48 by imugica-          #+#    #+#             */
-/*   Updated: 2025/02/26 19:06:44 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/02/27 13:03:47 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int count, char **args)
 	a = NULL;
 	b = NULL;
 	i = 0;
-	if (count != 2)
+	if (count < 2)
 	{
 		write(1, "Error\n", 6);
 		return (1);
@@ -89,6 +89,9 @@ int	main(int count, char **args)
 	if (!is_unique(a))
 		return (1);
 	set_indices(&a);
+	solve_two(&a);
+	if (ft_stsize(a) < 50)
+		solve_insert(&a, &b);
 	resolve(&a, &b);
 	ft_stfree(a);
 	return (0);

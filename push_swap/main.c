@@ -58,6 +58,35 @@ void	load_numbers(t_stack **a, char **args)
 	}
 	free(numbers);
 }
+/*void	load_numbers(t_stack **a, char **args)
+{
+	int		i;
+	int		j;
+	char	**numbers;
+	int		corr;
+
+	j = 1;
+	while (args[j])
+	{
+		corr = 1;
+		i = 0;
+		numbers = ft_split(args[j++], ' ');
+		while (numbers[i])
+		{
+			st_atoi(numbers[i], &corr);
+			if (corr)
+				ft_stadd_back(a, ft_stnew(ft_atoi(numbers[i++])));
+			else
+			{
+				write(1, "Error\n", 6);
+				exit(0);
+			}
+			free(numbers[i - 1]);
+		}
+		free(numbers);
+	}
+}*/
+
 
 void	ft_stfree(t_stack *stack)
 {

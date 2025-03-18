@@ -5,32 +5,62 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char	*replace_var(char **str, char **env)
+int	get_var_len(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (ft_isalpha(str[++i]))
+		;
+	return (i);
+}
+
+char	*get_var(char *str)
 {
 	int		i;
+	char	*var;
+	char	*value;
+
+	i = 0;
+	while (ft_isalpha(str[++i]))
+		;
+	if (i == 1)
+		return (printf("returning a dollarr \n"), "$");
+	var = malloc(i + 1);
+	ft_strlcpy(var, str, i + 1);
+	value = getenv(var + 1);
+	free(var);
+	if (value)
+		return (value);
+	return ("");
+}
+
+char	*replace_var(char *str, char **env)
+{
 	int		len;
 	char	*var;
 	char	*replace;
 	char	*temp;
+	char	*final;
 
-	i = 0;
-	var = ft_strchr(*str, '$');
-	if (!var)
-		return (NULL);
-	len = (var - *str);
-	temp = malloc(len + 1);
-	ft_strlcpy(temp, *str, len + 1);
-	/*
-	while (ft_strchr(*str, '$'))
+	len = 0;
+	var = ft_strchr(str + len, '$');
+	final = str;
+	while (var)
 	{
-		temp = malloc(len + 1);
-		ft_strlcpy(temp, *str, len);
-	}*/
-	printf("num of chars: %d\n", len);
-	printf("up to $: %s \n", temp);
-	free(temp);
-	while (ft_isalpha(var[++i]));
-	return (0);
+		if (!var)
+			return (final);
+		replace = get_var(var);
+		len = (var - final);
+		temp = malloc(len + 1 + ft_strlen(replace) + (ft_strlen(final) - (len
+						+ get_var_len(var))));
+		ft_strlcpy(temp, final, len + 1);
+		ft_strlcpy(temp + len, replace, ft_strlen(replace)  + 1);
+		final = ft_strjoin(temp, final + len + get_var_len(var));
+		free(temp);
+		var = ft_strchr(final + len + 1, '$');
+	}
+	return (final);
 }
 
 int	read_line(char *user, char **env)
@@ -40,7 +70,7 @@ int	read_line(char *user, char **env)
 	line = readline(user);
 	if (line)
 	{
-		printf("Contains Var: %s\n", replace_var(&line, env));
+		printf("PARSED LINE: %s\n", replace_var(line, env));
 		free(line);
 	}
 	else

@@ -25,7 +25,7 @@ char	*get_var(char *str)
 	while (ft_isalpha(str[++i]))
 		;
 	if (i == 1)
-		return (printf("returning a dollarr \n"), "$");
+		return ("$");
 	var = malloc(i + 1);
 	ft_strlcpy(var, str, i + 1);
 	value = getenv(var + 1);
@@ -55,7 +55,7 @@ char	*replace_var(char *str, char **env)
 		temp = malloc(len + 1 + ft_strlen(replace) + (ft_strlen(final) - (len
 						+ get_var_len(var))));
 		ft_strlcpy(temp, final, len + 1);
-		ft_strlcpy(temp + len, replace, ft_strlen(replace)  + 1);
+		ft_strlcpy(temp + len, replace, ft_strlen(replace) + 1);
 		final = ft_strjoin(temp, final + len + get_var_len(var));
 		free(temp);
 		var = ft_strchr(final + len + 1, '$');
@@ -66,11 +66,16 @@ char	*replace_var(char *str, char **env)
 int	read_line(char *user, char **env)
 {
 	char	*line;
+	//char	*trimed;
 
 	line = readline(user);
 	if (line)
 	{
-		printf("PARSED LINE: %s\n", replace_var(line, env));
+		//trimed = ft_strtrim(replace_var(line, env), " \"");
+		//printf("%s\n", trimed);
+		//printf("length = %d\n", ft_strlen(trimed));
+		//free(trimed);
+		printf("%s\n", replace_var(line, env));
 		free(line);
 	}
 	else
@@ -81,10 +86,18 @@ int	read_line(char *user, char **env)
 int	main(int count, char **args, char **env)
 {
 	char *user;
+	char *path;
+	char *shell_line;
 
-	user = ft_strjoin(getenv("USER"), "@minishell ");
+	user = ft_strjoin(getenv("USER"), "@minishell ~ %");
+	path = ft_strtrim(getenv("PWD"), getenv("HOME"));
+	shell_line = ft_strjoin(user, path);
 	while (1)
-		read_line(user, env);
+	{
+		read_line(shell_line, env);
+	}
 	free(user);
+	free(path);
+	free(shell_line);
 	return (0);
 }

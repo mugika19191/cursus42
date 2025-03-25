@@ -1,6 +1,7 @@
 #include "lib_ft/libft.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "headers.h"
 
 int	env_len(char **env)
 {
@@ -12,26 +13,27 @@ int	env_len(char **env)
 	return (i);
 }
 
-char	**export(char ***env, char *str)
+char	**export(char **env, char *str)
 {
 	int		i;
 	char	**copy;
 
-	i = env_len(*env);
+	i = env_len(env);
 	copy = (char **)malloc(sizeof(char *) * (i + 1));
-	while ((*env)[--i])
+	while ((env)[--i])
 	{
-		copy[i] = malloc(ft_strlen((*env)[i]) + 1);
-		copy[i] = ft_strdup((*env)[i]);
+		copy[i] = malloc(ft_strlen((env)[i]) + 1);
+		copy[i] = ft_strdup((env)[i]);
 	}
-	copy[env_len(*env) - 1] = ft_strdup(str);
+	copy[env_len(env) - 1] = ft_strdup(str);
 	return (copy);
 }
 
 int	main(int count, char **args, char **env)
 {
 	int i = 0;
-	env = export(&env, "sex=help");
+	if (!find_var("USER2",env))
+		env = export(env, "new_var=jeje");
 	while (env[i])
 		printf("%s\n", env[i++]);
 	return (0);

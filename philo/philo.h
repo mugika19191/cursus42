@@ -13,11 +13,16 @@ typedef struct s_stats
 	size_t			sleep_t;
 	size_t			eat_t;
 	size_t			die_t;
+	size_t			start_time;
+	int				amount_to_eat;
 }					t_stats;
 
 typedef struct s_philo
 {
 	int				id;
+	int				meals;
+	int				eating;
+	t_stats			*stats;
 	struct s_philo	*next;
 }					t_philo;
 

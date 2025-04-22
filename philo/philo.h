@@ -1,6 +1,5 @@
 #ifndef PHILO_H
 # define PHILO_H
-# include "libft/libft.h"
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -15,6 +14,7 @@ typedef struct s_stats
 	size_t			die_t;
 	size_t			start_time;
 	int				amount_to_eat;
+	int				philo_amount;
 }					t_stats;
 
 typedef struct s_philo
@@ -22,12 +22,27 @@ typedef struct s_philo
 	int				id;
 	int				meals;
 	int				eating;
+	size_t			last_meal;
 	t_stats			*stats;
+	pthread_t		thread;
+	pthread_mutex_t	time_mutex;
 	struct s_philo	*next;
 }					t_philo;
 
-t_philo				*ft_philotnew(int id);
+typedef struct s_manager
+{
+	int				is_over;
+	pthread_t		thread;
+	t_stats			*stats;
+	struct s_philo	*philos;
+	pthread_mutex_t	state_mutex;
+}					t_manager;
+
+t_philo				*ft_philotnew(int id, t_stats *stats);
 void				ft_philoadd_back(t_philo **lst, t_philo *new_elem);
 t_philo				*ft_philolast(t_philo *lst);
+int					ft_atoi(const char *str);
+size_t				get_current_time(void);
+void				*philo_sleep(void *philo);
 
 #endif

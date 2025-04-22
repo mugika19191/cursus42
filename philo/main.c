@@ -6,64 +6,117 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 10:40:04 by imugica-          #+#    #+#             */
-/*   Updated: 2025/04/17 11:04:08 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:38:53 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	is_space(char c)
+void	philo_think(t_philo *philo)
 {
-	if (c == ' ' || c == '\t' || c == '\n'
-		|| c == '\v' || c == '\r' || c == '\f')
-		return (1);
+	printf("%zu %d is thinking\n", get_current_time(), philo->id);
+}
+
+int	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = get_current_time();
+	while ((get_current_time() - start) < milliseconds)
+		usleep(500);
 	return (0);
 }
 
-int	ft_atoi(const char *str)
+void	*philo_sleep(void *philo)
 {
-	int	res;
-	int	i;
-	int	neg;
-
-	i = 0;
-	res = 0;
-	neg = 1;
-	while (is_space(str[i]))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			neg = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-		res = (res * 10) + (str[i++] - '0');
-	return (res * neg);
+	printf("%zu %d is sleeping\n", get_current_time()
+		- ((t_philo *)philo)->last_meal, ((t_philo *)philo)->id);
+	ft_usleep(((t_philo *)philo)->stats->sleep_t);
+	return (NULL);
 }
 
-int main(int count, char **args)
+int	check_over(t_philo *philo)
 {
-	t_philo *philos;
-	t_philo *p_head;
-	
+	int	i;
+
+	i = 0;
+	pthread_mutex_lock(&philo->time_mutex);
+	while (i < philo->stats->philo_amount)
+	{
+		i++;
+		if (get_current_time() - philo->last_meal >= philo->stats->die_t)
+		{
+			pthread_mutex_unlock(&philo->time_mutex);
+			return (1);
+		}
+		philo = philo->next;
+	}
+	pthread_mutex_unlock(&philo->time_mutex);
+	return (0);
+}
+
+void	*manage_loop(void *manager)
+{
+	t_manager	*manager_c;
+
+	manager_c = (t_manager *)manager;
+	while (1)
+	{
+		pthread_mutex_lock(&manager_c->state_mutex);
+		if (manager_c->is_over)
+		{
+			pthread_mutex_unlock(&manager_c->state_mutex);
+			break ;
+		}
+		manager_c->is_over = check_over(manager_c->philos);
+		pthread_mutex_unlock(&manager_c->state_mutex);
+	}
+	return (NULL);
+}
+
+void	init_stats(t_stats *stats, char **args, int mode)
+{
+	stats->philo_amount = ft_atoi(args[1]);
+	stats->die_t = ft_atoi(args[2]);
+	stats->eat_t = ft_atoi(args[3]);
+	stats->sleep_t = ft_atoi(args[4]);
+	if (mode)
+		stats->amount_to_eat = ft_atoi(args[5]);
+	return ;
+}
+
+int	main(int count, char **args)
+{
+	t_philo		*philos;
+	t_philo		*p_head;
+	t_stats		stats;
+	t_manager	manager;
+	int			i;
+
 	philos = NULL;
-	int i = 1;
-	if (count <= 5)
+	i = 1;
+	if (count < 5 || count > 6)
 		return (printf("Error arg count: %d\n", count), 1);
+	init_stats(&stats, args, (count == 6));
 	while (i <= ft_atoi(args[1]))
-	{
-		ft_philoadd_back(&philos , ft_philotnew(i++));
-	}
+		ft_philoadd_back(&philos, ft_philotnew(i++, &stats));
 	p_head = philos;
-	printf("philo id: %d\n", p_head->id);
-	p_head = philos->next;
-	while (philos != p_head)
+	while (p_head->id)
 	{
-		printf("philo id: %d\n", p_head->id);
+		pthread_create(&(p_head->thread), NULL, philo_sleep, (void *)p_head);
 		p_head = p_head->next;
+		if (p_head->id == 1)
+			break ;
 	}
-	usleep(ft_atoi(args[4]));
-	printf("last philo id: %d\n", ft_philolast(philos)->id);
-	printf("first philo id: %d\n", ft_philolast(philos)->next->id);
+	manager.is_over = 0;
+	pthread_mutex_init(&manager.state_mutex, NULL);
+	pthread_create(&(manager.thread), NULL, manage_loop, (void *)&manager);
+	while (p_head->id)
+	{
+		pthread_join(p_head->thread, NULL);
+		p_head = p_head->next;
+		if (p_head->id == 1)
+			break ;
+	}
+	return (0);
 }

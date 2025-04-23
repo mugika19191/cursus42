@@ -21,7 +21,7 @@ t_philo	*ft_philotnew(int id, t_stats *stats)
 	mylist->last_meal = get_current_time();
 	mylist->stats = stats;
 	pthread_mutex_init(&(mylist->time_mutex), NULL);
-	//pthread_create(&(mylist->thread), NULL, philo_sleep, (void *)p_head);
+	pthread_create(&(mylist->thread), NULL, philo_loop, (void *)mylist);
 	return (mylist);
 }
 

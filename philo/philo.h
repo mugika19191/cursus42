@@ -12,7 +12,9 @@ typedef struct s_stats
 	int				is_over;
 	int				amount_to_eat;
 	int				philo_amount;
-	pthread_mutex_t print_mutex;
+	int				created;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	created_mutex;
 	pthread_mutex_t	state_mutex;
 }					t_stats;
 
@@ -47,5 +49,6 @@ size_t				get_current_time(void);
 void				*philo_sleep(void *philo);
 void				*philo_loop(void *philo);
 t_philo				*ft_philotnew(int id, char **args, t_stats *stats);
+int					ft_isdigit(int c);
 
 #endif

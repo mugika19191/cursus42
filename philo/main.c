@@ -6,7 +6,7 @@
 /*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 10:40:04 by imugica-          #+#    #+#             */
-/*   Updated: 2025/05/01 13:17:42 by imugica-         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:51:48 by imugica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 
 void	philo_think(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->stats->state_mutex);
+	if (philo->stats->is_over) // Check if the simulation is over
+	{
+		pthread_mutex_unlock(&philo->stats->state_mutex);
+		return ; // Exit the loop if simulation is over
+	}
+	pthread_mutex_unlock(&philo->stats->state_mutex);
 	pthread_mutex_lock(&philo->stats->print_mutex);
 	printf("%zu %d is thinking\n", get_current_time() - philo->start_time,
 		philo->id);
@@ -30,16 +37,44 @@ int	ft_usleep(size_t milliseconds)
 	return (0);
 }
 
-void	philo_eat(t_philo *philo)
+int	philo_take_fork(t_philo *philo, int mode)
 {
-	// ft_usleep(100);
-	pthread_mutex_lock(&philo->fork);       // left
-	pthread_mutex_lock(&philo->next->fork); // right
+	pthread_mutex_lock(&philo->stats->state_mutex);
+	if (philo->stats->is_over)
+	{
+		pthread_mutex_unlock(&philo->stats->state_mutex);
+		return (0);
+	}
+	pthread_mutex_unlock(&philo->stats->state_mutex);
+	if (mode)
+		pthread_mutex_lock(&philo->fork);
+	else
+		pthread_mutex_lock(&philo->next->fork);
 	pthread_mutex_lock(&philo->stats->print_mutex);
 	printf("%zu %d has taken a fork\n", get_current_time() - philo->start_time,
 		philo->id);
-	printf("%zu %d has taken a fork\n", get_current_time() - philo->start_time,
-		philo->id);
+	pthread_mutex_unlock(&philo->stats->print_mutex);
+	return (1);
+}
+
+void	philo_eat(t_philo *philo)
+{
+	// usleep(100);
+	if (philo->id % 2 == 0)
+	{
+		if (!philo_take_fork(philo, 1))
+			return ;
+		if (!philo_take_fork(philo, 0))
+			return ;
+	}
+	else
+	{
+		if (!philo_take_fork(philo, 0))
+			return ;
+		if (!philo_take_fork(philo, 1))
+			return ;
+	}
+	pthread_mutex_lock(&philo->stats->print_mutex);
 	printf("%zu %d is eating\n", get_current_time() - philo->start_time,
 		philo->id);
 	pthread_mutex_unlock(&philo->stats->print_mutex);
@@ -47,8 +82,8 @@ void	philo_eat(t_philo *philo)
 	philo->last_meal = get_current_time();
 	pthread_mutex_unlock(&philo->time_mutex);
 	usleep(philo->eat_t * 1000);
-	pthread_mutex_unlock(&philo->next->fork); // right
-	pthread_mutex_unlock(&philo->fork);       // left
+	pthread_mutex_unlock(&philo->next->fork);
+	pthread_mutex_unlock(&philo->fork);
 }
 
 void	*philo_sleep(void *philo)
@@ -56,6 +91,13 @@ void	*philo_sleep(void *philo)
 	t_philo	*philo_c;
 
 	philo_c = philo;
+	pthread_mutex_lock(&philo_c->stats->state_mutex);
+	if (philo_c->stats->is_over) // Check if the simulation is over
+	{
+		pthread_mutex_unlock(&philo_c->stats->state_mutex);
+		return (NULL); // Exit the loop if simulation is over
+	}
+	pthread_mutex_unlock(&philo_c->stats->state_mutex);
 	pthread_mutex_lock(&philo_c->stats->print_mutex);
 	printf("%zu %d is sleeping\n", get_current_time()
 		- ((t_philo *)philo)->start_time, ((t_philo *)philo)->id);
@@ -101,6 +143,13 @@ void	*philo_loop(void *philo)
 	philo_c = (t_philo *)philo;
 	philo_c->start_time = get_current_time();
 	philo_c->last_meal = get_current_time();
+	pthread_mutex_lock(&philo_c->stats->created_mutex);
+	philo_c->stats->created--;
+	while (philo_c->stats->created > 0)
+	{
+		pthread_mutex_unlock(&philo_c->stats->created_mutex);
+	}
+	pthread_mutex_unlock(&philo_c->stats->created_mutex);
 	philo_think(philo_c); // Philosopher starts by thinking
 	while (1)
 	{
@@ -111,22 +160,8 @@ void	*philo_loop(void *philo)
 			break ; // Exit the loop if simulation is over
 		}
 		pthread_mutex_unlock(&philo_c->stats->state_mutex);
-		philo_eat(philo_c); // Philosopher eats
-		pthread_mutex_lock(&philo_c->stats->state_mutex);
-		if (philo_c->stats->is_over) // Double check after eating
-		{
-			pthread_mutex_unlock(&philo_c->stats->state_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&philo_c->stats->state_mutex);
+		philo_eat(philo_c);   // Philosopher eats
 		philo_sleep(philo_c); // Philosopher sleeps
-		pthread_mutex_lock(&philo_c->stats->state_mutex);
-		if (philo_c->stats->is_over) // Double check after sleeping
-		{
-			pthread_mutex_unlock(&philo_c->stats->state_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&philo_c->stats->state_mutex);
 		philo_think(philo_c); // Philosopher thinks again
 	}
 	return (NULL);
@@ -137,18 +172,23 @@ void	*manage_loop(void *manager)
 	t_manager	*manager_c;
 
 	manager_c = (t_manager *)manager;
+	pthread_mutex_lock(&manager_c->stats->created_mutex);
+	while (manager_c->stats->created > 0)
+	{
+		pthread_mutex_unlock(&manager_c->stats->created_mutex);
+	}
+	pthread_mutex_unlock(&manager_c->stats->created_mutex);
 	while (1)
 	{
 		pthread_mutex_lock(&manager_c->stats->state_mutex);
-		if (manager_c->stats->is_over) // Check if the simulation is over
+		if (manager_c->stats->is_over)
 		{
 			pthread_mutex_unlock(&manager_c->stats->state_mutex);
-			break ; // Exit the loop if simulation is over
+			break ;
 		}
 		manager_c->stats->is_over = check_over(manager_c->philos);
-			// Check if any philosopher has died
 		pthread_mutex_unlock(&manager_c->stats->state_mutex);
-		// usleep(100);  // Reduced sleep time for quicker response
+		//usleep(500);  // Reduced sleep time for quicker response
 	}
 	return (NULL);
 }
@@ -156,43 +196,67 @@ void	*manage_loop(void *manager)
 void	init_stats(t_stats *stats, char **args, int mode)
 {
 	stats->is_over = 0;
+	stats->created = ft_atoi(args[1]);
 	stats->philo_amount = ft_atoi(args[1]);
 	pthread_mutex_init(&stats->state_mutex, NULL);
+	pthread_mutex_init(&stats->created_mutex, NULL);
 	pthread_mutex_init(&stats->print_mutex, NULL);
 	if (mode)
 		stats->amount_to_eat = ft_atoi(args[5]);
 	return ;
 }
 
+int	check_inputs(char **args, int count)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 1;
+	while (i < count)
+	{
+		while (args[i][j])
+		{
+			if (!ft_isdigit(args[i][j]))
+				return (1);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	return (0);
+}
+
 int	main(int count, char **args)
 {
-	t_philo		*philos;
 	t_philo		*p_head;
 	t_stats		stats;
 	t_manager	manager;
 	int			i;
 
-	philos = NULL;
+	p_head = NULL;
 	i = 1;
 	if (count < 5 || count > 6)
 		return (printf("Error arg count: %d\n", count), 1);
+	if (check_inputs(args, count))
+		return (printf("Error arg type\n"), 1);
 	init_stats(&stats, args, (count == 6));
 	while (i <= ft_atoi(args[1]))
-		ft_philoadd_back(&philos, ft_philotnew(i++, args, &stats));
-	manager.philos = philos;
+		ft_philoadd_back(&p_head, ft_philotnew(i++, args, &stats));
+	manager.philos = p_head;
 	manager.stats = &stats;
-	p_head = philos;
-	i = 1;
+	pthread_mutex_lock(&stats.created_mutex);
+	i = 0;
 	while (i <= ft_atoi(args[1]))
 	{
+		if (p_head->id % 2 == 0)
+			usleep(500);
 		pthread_create(&(p_head->thread), NULL, philo_loop, (void *)p_head);
-		if (i % 2 == 0)
-			ft_usleep(500);
 		p_head = p_head->next;
 		i++;
 	}
+	pthread_mutex_unlock(&stats.created_mutex);
 	pthread_create(&(manager.thread), NULL, manage_loop, (void *)&manager);
-	p_head = philos;
 	while (p_head->id)
 	{
 		pthread_join(p_head->thread, NULL);

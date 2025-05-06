@@ -1,4 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/06 13:16:36 by imugica-          #+#    #+#             */
+/*   Updated: 2025/05/06 13:23:17 by imugica-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
+
+void	throw_thread(t_stats stats, t_philo *p_head, int count)
+{
+	int	i;
+
+	pthread_mutex_lock(&stats.created_mutex);
+	i = 0;
+	while (i < count)
+	{
+		if (p_head->id % 2 == 0)
+			usleep(500);
+		pthread_create(&(p_head->thread), NULL, philo_loop, (void *)p_head);
+		p_head = p_head->next;
+		i++;
+	}
+	pthread_mutex_unlock(&stats.created_mutex);
+}
 
 size_t	get_current_time(void)
 {
@@ -9,7 +38,7 @@ size_t	get_current_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-t_philo	*ft_philotnew(int id, char **args ,t_stats *stats)
+t_philo	*ft_philotnew(int id, char **args, t_stats *stats)
 {
 	t_philo	*mylist;
 
@@ -21,11 +50,9 @@ t_philo	*ft_philotnew(int id, char **args ,t_stats *stats)
 	mylist->die_t = ft_atoi(args[2]);
 	mylist->eat_t = ft_atoi(args[3]);
 	mylist->sleep_t = ft_atoi(args[4]);
-	//mylist->last_meal = get_current_time();
 	mylist->stats = stats;
 	pthread_mutex_init(&(mylist->time_mutex), NULL);
 	pthread_mutex_init(&mylist->fork, NULL);
-	//pthread_create(&(mylist->thread), NULL, philo_loop, (void *)mylist);
 	return (mylist);
 }
 
@@ -44,7 +71,8 @@ void	ft_philoadd_back(t_philo **lst, t_philo *new_elem)
 
 t_philo	*ft_philolast(t_philo *lst)
 {
-	t_philo *lst_cpy;
+	t_philo	*lst_cpy;
+
 	lst_cpy = lst->next;
 	if (!lst)
 		return (NULL);

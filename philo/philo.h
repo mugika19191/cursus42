@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imugica- <imugica-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/06 13:17:16 by imugica-          #+#    #+#             */
+/*   Updated: 2025/05/06 13:44:21 by imugica-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
@@ -50,5 +62,16 @@ void				*philo_sleep(void *philo);
 void				*philo_loop(void *philo);
 t_philo				*ft_philotnew(int id, char **args, t_stats *stats);
 int					ft_isdigit(int c);
+void				join_all(t_philo *p_head, t_manager manager);
+int					check_inputs(char **args, int count);
+void				init_stats(t_stats *stats, char **args, int mode);
+void				philo_think(t_philo *philo);
+int					ft_usleep(size_t milliseconds);
+void				philo_eat(t_philo *philo);
+void				*philo_sleep(void *philo);
+void				dead_philo(t_philo *philo);
+void				throw_thread(t_stats stats, t_philo *p_head, int count);
+int					philo_take_fork(t_philo *philo, int mode);
+void				print_msg(char *str, t_philo *philo);
 
 #endif

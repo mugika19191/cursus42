@@ -33,6 +33,15 @@ int	ft_usleep(size_t milliseconds)
 		usleep(100);
 	return (0);
 }
+void remove_meal(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->eat_mutex);
+	if (philo->meals > 0)
+	{
+		philo->meals--;
+	}
+	pthread_mutex_unlock(&philo->eat_mutex);
+}
 
 void	philo_eat(t_philo *philo)
 {
@@ -51,6 +60,7 @@ void	philo_eat(t_philo *philo)
 		return ;
 	}
 	print_msg("is eating", philo);
+	remove_meal(philo);
 	pthread_mutex_lock(&philo->time_mutex);
 	philo->last_meal = get_current_time();
 	pthread_mutex_unlock(&philo->time_mutex);

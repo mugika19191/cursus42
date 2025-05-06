@@ -12,11 +12,10 @@
 
 #include "philo.h"
 
-void	throw_thread(t_stats stats, t_philo *p_head, int count)
+void	throw_thread(t_philo *p_head, int count)
 {
 	int	i;
 
-	pthread_mutex_lock(&stats.created_mutex);
 	i = 0;
 	while (i < count)
 	{
@@ -26,7 +25,6 @@ void	throw_thread(t_stats stats, t_philo *p_head, int count)
 		p_head = p_head->next;
 		i++;
 	}
-	pthread_mutex_unlock(&stats.created_mutex);
 }
 
 size_t	get_current_time(void)
@@ -38,7 +36,7 @@ size_t	get_current_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-t_philo	*ft_philotnew(int id, char **args, t_stats *stats)
+t_philo	*ft_philotnew(int id, char **args, t_stats *stats, int mode)
 {
 	t_philo	*mylist;
 
@@ -50,9 +48,14 @@ t_philo	*ft_philotnew(int id, char **args, t_stats *stats)
 	mylist->die_t = ft_atoi(args[2]);
 	mylist->eat_t = ft_atoi(args[3]);
 	mylist->sleep_t = ft_atoi(args[4]);
+	if (mode)
+		mylist->meals = ft_atoi(args[5]);
+	else
+		mylist->meals = -1;
 	mylist->stats = stats;
 	pthread_mutex_init(&(mylist->time_mutex), NULL);
 	pthread_mutex_init(&mylist->fork, NULL);
+	pthread_mutex_init(&mylist->eat_mutex, NULL);
 	return (mylist);
 }
 

@@ -22,9 +22,18 @@ int	philo_take_fork(t_philo *philo, int mode)
 	}
 	pthread_mutex_unlock(&philo->stats->state_mutex);
 	if (mode)
+	{
 		pthread_mutex_lock(&philo->fork);
+	}
 	else
 		pthread_mutex_lock(&philo->next->fork);
+	pthread_mutex_lock(&philo->stats->state_mutex);
+	if (philo->stats->is_over)
+	{
+		pthread_mutex_unlock(&philo->stats->state_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->stats->state_mutex);
 	print_msg("has taken a fork", philo);
 	return (1);
 }
@@ -32,12 +41,19 @@ int	philo_take_fork(t_philo *philo, int mode)
 int	check_over(t_philo *philo)
 {
 	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	while (i < philo->stats->philo_amount)
 	{
+		pthread_mutex_lock(&philo->eat_mutex);
+		if (philo->meals == 0)
+			j++;
+		pthread_mutex_unlock(&philo->eat_mutex);
 		pthread_mutex_lock(&philo->time_mutex);
-		if (get_current_time() - philo->last_meal >= philo->die_t)
+		if (get_current_time() - philo->last_meal >= philo->die_t
+			|| j == philo->stats->philo_amount)
 		{
 			dead_philo(philo);
 			pthread_mutex_unlock(&philo->time_mutex);
@@ -105,12 +121,12 @@ int	main(int count, char **args)
 		return (printf("Error arg count: %d\n", count), 1);
 	if (check_inputs(args, count))
 		return (printf("Error arg type\n"), 1);
-	init_stats(&stats, args, (count == 6));
+	init_stats(&stats, args);
 	while (i <= ft_atoi(args[1]))
-		ft_philoadd_back(&p_head, ft_philotnew(i++, args, &stats));
+		ft_philoadd_back(&p_head, ft_philotnew(i++, args, &stats, count == 6));
 	manager.philos = p_head;
 	manager.stats = &stats;
-	throw_thread(stats, p_head, ft_atoi(args[1]));
+	throw_thread(p_head, ft_atoi(args[1]));
 	pthread_create(&(manager.thread), NULL, manage_loop, (void *)&manager);
 	join_all(p_head, manager);
 	return (0);

@@ -42,16 +42,12 @@ int	ft_atoi(const char *str)
 	return (res * neg);
 }
 
-void	init_stats(t_stats *stats, char **args, int mode)
+void	init_stats(t_stats *stats, char **args)
 {
 	stats->is_over = 0;
-	stats->created = ft_atoi(args[1]);
 	stats->philo_amount = ft_atoi(args[1]);
 	pthread_mutex_init(&stats->state_mutex, NULL);
-	pthread_mutex_init(&stats->created_mutex, NULL);
 	pthread_mutex_init(&stats->print_mutex, NULL);
-	if (mode)
-		stats->amount_to_eat = ft_atoi(args[5]);
 	return ;
 }
 

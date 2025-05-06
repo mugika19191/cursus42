@@ -22,11 +22,8 @@
 typedef struct s_stats
 {
 	int				is_over;
-	int				amount_to_eat;
 	int				philo_amount;
-	int				created;
 	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	created_mutex;
 	pthread_mutex_t	state_mutex;
 }					t_stats;
 
@@ -42,6 +39,7 @@ typedef struct s_philo
 	size_t			start_time;
 	t_stats			*stats;
 	pthread_t		thread;
+	pthread_mutex_t	eat_mutex;
 	pthread_mutex_t	time_mutex;
 	pthread_mutex_t	fork;
 	struct s_philo	*next;
@@ -60,17 +58,17 @@ int					ft_atoi(const char *str);
 size_t				get_current_time(void);
 void				*philo_sleep(void *philo);
 void				*philo_loop(void *philo);
-t_philo				*ft_philotnew(int id, char **args, t_stats *stats);
+t_philo				*ft_philotnew(int id, char **args, t_stats *stats, int mode);
 int					ft_isdigit(int c);
 void				join_all(t_philo *p_head, t_manager manager);
 int					check_inputs(char **args, int count);
-void				init_stats(t_stats *stats, char **args, int mode);
+void				init_stats(t_stats *stats, char **args);
 void				philo_think(t_philo *philo);
 int					ft_usleep(size_t milliseconds);
 void				philo_eat(t_philo *philo);
 void				*philo_sleep(void *philo);
 void				dead_philo(t_philo *philo);
-void				throw_thread(t_stats stats, t_philo *p_head, int count);
+void				throw_thread(t_philo *p_head, int count);
 int					philo_take_fork(t_philo *philo, int mode);
 void				print_msg(char *str, t_philo *philo);
 
